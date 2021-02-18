@@ -1,7 +1,18 @@
 import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import connectDB from './config/db.js';
+
+import servicesRoutes from './routes/services.routes.js';
 
 const app = express();
+dotenv.config();
+connectDB();
 
-app.use('/', (req, res) => res.send('Server works'));
+app.use(express.json({ limit: '10mb', extended: true }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+app.use(cors());
 
-app.listen(5000, () => console.log('Server running'));
+app.use('/services/', servicesRoutes);
+
+app.listen(process.env.PORT, () => console.log('Server running'));

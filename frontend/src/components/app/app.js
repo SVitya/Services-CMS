@@ -1,10 +1,12 @@
 import React from 'react';
 import { CssBaseline } from '@material-ui/core';
 
+import Routes from '../../routes/Routes';
+
 const App = () => {
   return (
     <CssBaseline>
-      App works
+      <Routes />
     </CssBaseline>
   )
 }
