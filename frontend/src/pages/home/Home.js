@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
   Container,
-  Grid
+  Grid,
+  Button
 } from '@material-ui/core';
 
 import { fetchServices } from '../../utils/services';
@@ -12,14 +13,18 @@ const Home = () => {
   const [loadFrom, setLoadFrom] = useState(0);
 
   useEffect(() => {
-    if (services.length && loadFrom == 0) {
-      return
-    }
-    fetchServices().then(res => setServices(res.data));
+    loadBatchOfServices(loadFrom);
   }, []);
 
   const handleClick = () => {
-    setLoadFrom(loadFrom => loadFrom + 8);
+    loadBatchOfServices(loadFrom);
+  }
+
+  const loadBatchOfServices = (loadFrom) => {
+    fetchServices(loadFrom)
+      .then(res => setServices((prevServices) => [...prevServices, ...res.data]))
+      .then(() => setLoadFrom(loadFrom => loadFrom + 8))
+      .catch(err => console.log(err.message))
   }
 
   return (
@@ -31,6 +36,13 @@ const Home = () => {
               <ServiceCard service={service} />
             </Grid>
           ))}
+          <Grid container spacing={3} justify="center">
+            <Grid item item xs={12} sm={2}>
+              <Button onClick={handleClick} variant="contained" color="primary" fullWidth>
+                Load more
+              </Button>
+            </Grid>
+          </Grid>
         </Grid>
       )}
     </Container>
