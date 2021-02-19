@@ -18,7 +18,7 @@ const styles = useStyles();
         <Toolbar>
           <Typography
             component={Link}
-            to='/service'
+            to='/'
             className={styles.title}
             variant='h6'
           >

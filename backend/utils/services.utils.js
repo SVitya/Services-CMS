@@ -11,3 +11,13 @@ export const getServices = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 }
+
+export const getService = async (req, res) => {
+  try {
+    const service = await Service.findOne({ _id: req.params.id });
+    
+    res.status(200).json(service);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+}

@@ -13,6 +13,7 @@ app.use(express.json({ limit: '10mb', extended: true }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(cors());
 
-app.use('/services/', servicesRoutes);
+app.use('/services', servicesRoutes);
+
 
 app.listen(process.env.PORT, () => console.log('Server running'));
