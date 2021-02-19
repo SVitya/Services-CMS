@@ -11,6 +11,7 @@ import ServiceCard from '../../components/service-card/ServiceCard';
 const Home = () => {
   const [services, setServices] = useState([]);
   const [loadFrom, setLoadFrom] = useState(0);
+  const [servicesAmount, setServicesAmount] = useState(0);
 
   useEffect(() => {
     loadBatchOfServices(loadFrom);
@@ -22,7 +23,10 @@ const Home = () => {
 
   const loadBatchOfServices = (loadFrom) => {
     fetchServices(loadFrom)
-      .then(res => setServices((prevServices) => [...prevServices, ...res.data]))
+      .then(res => {
+        setServices((prevServices) => [...prevServices, ...res.data.services])
+        setServicesAmount(res.data.servicesAmount)
+      })
       .then(() => setLoadFrom(loadFrom => loadFrom + 8))
       .catch(err => console.log(err.message))
   }
@@ -36,13 +40,15 @@ const Home = () => {
               <ServiceCard service={service} />
             </Grid>
           ))}
-          <Grid container spacing={3} justify="center">
-            <Grid item item xs={12} sm={2}>
-              <Button onClick={handleClick} variant="contained" color="primary" fullWidth>
-                Load more
-              </Button>
+          {loadFrom < servicesAmount &&
+            <Grid container spacing={3} justify="center">
+              <Grid item item xs={12} sm={2}>
+                <Button onClick={handleClick} variant="contained" color="primary" fullWidth>
+                  Load more
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
+          }
         </Grid>
       )}
     </Container>
