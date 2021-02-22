@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   AppBar,
@@ -6,7 +6,7 @@ import {
   Toolbar,
   Typography,
   Button
-} from '@material-ui/core';
+} from '@material-ui/core'; 
 
 import useStyles from './header.styles';
 
@@ -30,7 +30,12 @@ const Header = ({ isSignIn, setIsSignIn}) => {
           >
             Services CMS
           </Typography>
-          {isSignIn ? <Button className={styles.btn} onClick={logout}>Log out</Button> : (
+          {isSignIn ? (
+            <div>
+              <Button className={styles.btn} component={Link} to='/new'>New service</Button>
+              <Button className={styles.btn} onClick={logout}>Log out</Button>
+            </div>
+          ) : (
             <Button className={styles.btn} component={Link} to='/auth'>Sign in</Button>
           )}
         </Toolbar>

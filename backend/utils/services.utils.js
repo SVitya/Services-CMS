@@ -22,3 +22,15 @@ export const getService = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 }
+
+export const createService = async (req, res) => {
+  const service = req.body;
+  const newService = new Service(service);
+
+  try {
+    await newService.save();
+    res.status(201).json(newService);
+  } catch (error) {
+    res.status(409).json({ message: error.message });
+  }
+}
