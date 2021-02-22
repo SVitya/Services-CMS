@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   Container,
   Paper,
@@ -9,8 +10,9 @@ import {
 
 import Input from '../../components/input/Input';
 import useStyles from './auth.styles';
+import { signIn, signUp } from '../../utils/user';
 
-const Auth = () => {
+const Auth = ({ setIsSignIn }) => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -18,15 +20,29 @@ const Auth = () => {
     password: '',
     confirmPassword: '',
   });
-  const isSignUp = false;
+  const [isSignUp, setIsSignUp] = useState(true);
+  const history = useHistory();
   const styles = useStyles();
 
-  const handleSubmit = () => {
-    console.log('Form submited')
+  const switchMode = () => {
+    setIsSignUp(prevIsSignUp => !prevIsSignUp);
   }
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    isSignUp ? signIn(formData)
+      .then(res => localStorage.setItem('profile', JSON.stringify({ ...res })))
+      .then(() => {history.push('/'); setIsSignIn(true)})
+      .catch(err => alert(err.response.data.message)) :
+    signUp(formData)
+      .then(res => localStorage.setItem('profile', JSON.stringify({ ...res })))
+      .then(() => {history.push('/'); setIsSignIn(true)})
+      .catch(err => alert(err.response.data.message));
   }
 
   return (
@@ -37,20 +53,23 @@ const Auth = () => {
         </Typography>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
-            {isSignUp && (
+            {!isSignUp && (
               <>
                 <Input name='firstName' label='First name' type='text' value={formData.firstName} onChange={handleChange} autoFocus small />
                 <Input name='lastName' label='Last name' type='text' value={formData.lastName} onChange={handleChange} small />
               </>
-            )}
+            )}  
             <Input name='email' label='Email' type='email' value={formData.email} onChange={handleChange} autoFocus={!isSignUp} />
             <Input name='password' label='Password' type='password' value={formData.password} onChange={handleChange} />
-            {isSignUp &&
+            {!isSignUp &&
               <Input name='confirmPassword' label='Repeat Password' type='password' value={formData.confirmPassword} onChange={handleChange} />
             }
             <Grid item xs={12}>
-              <Button variant='contained' color='primary' fullWidth>
+              <Button type='submit' variant='contained' color='primary' fullWidth>
                 {isSignUp ? 'Sign In' : 'Sign Up'}
+              </Button>
+              <Button onClick={switchMode} fullWidth>
+                { isSignUp ? "Don't have an account? Sign Up" : 'Already have an account? Sign in'}
               </Button>
             </Grid>
           </Grid>

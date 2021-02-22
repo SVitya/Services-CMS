@@ -1,21 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   AppBar,
   Container,
   Toolbar,
-  Typography
+  Typography,
+  Button
 } from '@material-ui/core';
 
 import useStyles from './header.styles';
 
-const Header = () => {
-const styles = useStyles();
+const Header = ({ isSignIn, setIsSignIn}) => {
+  const styles = useStyles();
+
+  const logout = () => {
+    localStorage.clear();
+    setIsSignIn(false);
+  }
 
   return (
     <AppBar className={styles.root} position='static'>
       <Container>
-        <Toolbar>
+        <Toolbar className={styles.toolbar}>
           <Typography
             component={Link}
             to='/'
@@ -24,6 +30,9 @@ const styles = useStyles();
           >
             Services CMS
           </Typography>
+          {isSignIn ? <Button className={styles.btn} onClick={logout}>Log out</Button> : (
+            <Button className={styles.btn} component={Link} to='/auth'>Sign in</Button>
+          )}
         </Toolbar>
       </Container>
     </AppBar>
