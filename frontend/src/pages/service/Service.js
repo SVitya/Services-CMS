@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import {
   Container,
@@ -13,13 +14,19 @@ import image from '../../image/defaultImage.jpg';
 
 const Service = () => {
   const [ service, setService ] = useState({});
+  const { loadedServices } = useSelector(state => state.services);
   const { id } = useParams();
   const styles = useStyles();
 
   useEffect(() => {
-    fetchService(id)
-      .then(res => setService({...res.data}))
-  }, []);
+    let service = loadedServices.find(service => service._id == id);
+    if (service) {
+      setService(service)
+    } else {
+      fetchService(id)
+        .then(res => setService({...res.data}))
+    }
+  }, [loadedServices]);
 
   return(
     <Container maxWidth='lg'>

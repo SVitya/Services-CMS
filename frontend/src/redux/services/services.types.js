@@ -1,0 +1,3 @@
+const FETCH_BATCH = 'FETCH_BATCH';
+
+export { FETCH_BATCH };

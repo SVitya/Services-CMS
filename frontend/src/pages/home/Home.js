@@ -1,46 +1,39 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Container,
   Grid,
   Button
 } from '@material-ui/core';
 
-import { fetchServices } from '../../utils/services';
+import { getServices } from '../../redux/services/services.actions';
 import ServiceCard from '../../components/service-card/ServiceCard';
 
 const Home = () => {
-  const [services, setServices] = useState([]);
-  const [loadFrom, setLoadFrom] = useState(0);
-  const [servicesAmount, setServicesAmount] = useState(0);
+  const dispatch = useDispatch();
+  const { loadedServices, servicesAmount } = useSelector(state => state.services);
+  const [loadFrom, setLoadFrom] = useState(loadedServices.length);
+  const itemsInBatch = 8;
 
   useEffect(() => {
-    loadBatchOfServices(loadFrom);
-  }, []);
+    if (loadFrom == servicesAmount) return;
+    dispatch(getServices(loadFrom, itemsInBatch));
+  }, [loadFrom, dispatch]);
 
   const handleClick = () => {
-    loadBatchOfServices(loadFrom);
-  }
-
-  const loadBatchOfServices = (loadFrom) => {
-    fetchServices(loadFrom)
-      .then(res => {
-        setServices((prevServices) => [...prevServices, ...res.data.services])
-        setServicesAmount(res.data.servicesAmount)
-      })
-      .then(() => setLoadFrom(loadFrom => loadFrom + 8))
-      .catch(err => console.log(err.message))
+    setLoadFrom(loadFrom => loadFrom + itemsInBatch);
   }
 
   return (
     <Container maxWidth='lg'>
-      {!services.length ? <div>Loading...</div> : (
+      {!loadedServices.length  ? <div>Loading...</div> : (
         <Grid container spacing={3}>
-          {services.map(service => (
+          {loadedServices.map(service => (
             <Grid key={service._id} item xs={12} sm={6} lg={3}>
               <ServiceCard service={service} />
             </Grid>
           ))}
-          {loadFrom < servicesAmount &&
+          {loadFrom + itemsInBatch < servicesAmount &&
             <Grid container spacing={3} justify="center">
               <Grid item item xs={12} sm={2}>
                 <Button onClick={handleClick} variant="contained" color="primary" fullWidth>
