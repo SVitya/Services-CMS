@@ -8,6 +8,7 @@ const serviceSchema = mongoose.Schema({
   closeHour: Number,
   items: Array,
   phoneNumber: String,
+  creator: String,
 });
 
 const Service = mongoose.model('Service', serviceSchema);

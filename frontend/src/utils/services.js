@@ -1,9 +1,17 @@
 import axios from 'axios';
 
-const baseUrl = axios.create({ baseUrl: 'http://localhost:5000'});
+const server = axios.create({ server: 'http://localhost:5000'});
 
-const fetchServices = (loadFrom, itemsInBatch) => baseUrl.get(`/services/?from=${loadFrom}&n=${itemsInBatch}`);
-const fetchService = (serviceId) => baseUrl.get(`/services/${serviceId}`);
-const newService = (serviceData) => baseUrl.post('/services/', serviceData);
+server.interceptors.request.use(req => {
+  if (localStorage.getItem('profile')) {
+    req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem('profile')).data.token}`;
+  }
+
+  return req;
+})
+
+const fetchServices = (loadFrom, itemsInBatch) => server.get(`/services/?from=${loadFrom}&n=${itemsInBatch}`);
+const fetchService = (serviceId) => server.get(`/services/${serviceId}`);
+const newService = (serviceData) => server.post('/services/', serviceData);
 
 export { fetchServices, fetchService, newService };

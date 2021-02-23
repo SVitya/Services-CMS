@@ -24,8 +24,10 @@ export const getService = async (req, res) => {
 }
 
 export const createService = async (req, res) => {
+  if(!req.userId) return res.status(401).json({ message: 'Unauthorised'});
+  
   const service = req.body;
-  const newService = new Service(service);
+  const newService = new Service({...service, creator: req.userId });
 
   try {
     await newService.save();

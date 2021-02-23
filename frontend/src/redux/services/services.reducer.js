@@ -5,7 +5,7 @@ const servicesReducer = (services = { loadedServices: []}, action) => {
     case FETCH_BATCH:
       return { loadedServices: [...services.loadedServices, ...action.payload.loadedServices], servicesAmount: action.payload.servicesAmount };
     case NEW_SERVICE:
-      return { loadedServices: [...services.loadedServices, ...action.payload] }
+      return { loadedServices: [...services.loadedServices, action.payload] }
     default:
       return services;
   }
