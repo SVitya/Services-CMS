@@ -15,12 +15,12 @@ const ServiceCard = ({ service }) => {
   const styles = useStyles();
 
   return (
-    <Card>
+    <Card className={styles.card}>
       <CardActionArea component={Link} to={`service/${service._id}`}>
         <CardMedia image={service.image ? service.image : image} title={`${service.title} title`} className={styles.media} />
-        <CardContent>
+        <CardContent className={styles.content}>
           <Typography variant="h5" component="h2">{service.title}</Typography>
-          <Typography variant="body2" color="textSecondary" component="p">{service.description}</Typography>
+          <Typography variant="body2" color="textSecondary" component="p">{service.description.match(/.{1,115}(\s|$)/g)[0] + '...'}</Typography>
         </CardContent>
       </CardActionArea>
     </Card>

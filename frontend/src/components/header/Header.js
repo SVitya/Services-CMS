@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   AppBar,
@@ -6,17 +6,28 @@ import {
   Toolbar,
   Typography,
   Button
-} from '@material-ui/core'; 
+} from '@material-ui/core';
 
 import useStyles from './header.styles';
 
 const Header = ({ isSignIn, setIsSignIn}) => {
+  const [mobile, setMobile] = useState(false);
   const styles = useStyles();
 
   const logout = () => {
     localStorage.clear();
     setIsSignIn(false);
   }
+
+  useEffect(() => {
+    const setResponsiveness = () => {
+      return window.innerWidth <  360 ? setMobile(true) : setMobile(false);
+    };
+
+    setResponsiveness();
+
+    window.addEventListener("resize", () => setResponsiveness());
+  }, []);
 
   return (
     <AppBar className={styles.root} position='static'>
@@ -32,7 +43,7 @@ const Header = ({ isSignIn, setIsSignIn}) => {
           </Typography>
           {isSignIn ? (
             <div>
-              <Button className={styles.btn} component={Link} to='/new'>New service</Button>
+              <Button className={styles.btn} component={Link} to='/new'>{mobile ? 'New' : 'New service'}</Button>
               <Button className={styles.btn} onClick={logout}>Log out</Button>
             </div>
           ) : (

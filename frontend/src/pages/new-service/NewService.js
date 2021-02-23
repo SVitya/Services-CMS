@@ -8,6 +8,7 @@ import {
   Typography,
   Button
 } from '@material-ui/core';
+import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 
 import Input from '../../components/input/Input';
 import OpenHours from '../../components/open-hours/OpenHours';
@@ -25,7 +26,7 @@ const NewService = () => {
   });
   const dispatch = useDispatch();
   const history = useHistory();
-  const classes = useStyles();
+  const styles = useStyles();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -46,6 +47,7 @@ const NewService = () => {
 
   const handleFileInput = (e) => {
     let file = e.target.files[0];
+    if (file.size > 1000000) return alert('Image size is to big. Max size - 1mb');
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = function() {
@@ -55,8 +57,8 @@ const NewService = () => {
 
   return (
     <Container maxWidth='lg'>
-      <Paper className={classes.paper} elevation={24}>
-        <form className={`${classes.root} ${classes.form}`} autoComplete='off' noValidate onSubmit={handleSubmit}>
+      <Paper className={styles.paper} elevation={24}>
+        <form className={`${styles.root} ${styles.form}`} autoComplete='off' noValidate onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography variant='h6'>
@@ -64,7 +66,7 @@ const NewService = () => {
               </Typography>
             </Grid>
             <Input name='title' label='Title' value={serviceData.title} onChange={handleChange} autoFocus />
-            <Input name='description' label='Description' value={serviceData.description} onChange={handleChange} />
+            <Input name='description' label='Description' value={serviceData.description} onChange={handleChange} multiline />
             <Grid item xs={12}>
               <label htmlFor='image'>
                 <input
@@ -75,8 +77,8 @@ const NewService = () => {
                   style={{ display: 'none' }}
                   onChange={handleFileInput}
                 />
-                <Button component='span' variant='contained' color='primary' fullWidth>
-                  Upload cover image
+                <Button component='span' startIcon={<AddPhotoAlternateIcon />} variant='contained' color='primary' fullWidth>
+                  {serviceData.image == '' ? 'Upload cover image (max 1mb)' : 'Uploaded'}
                 </Button>
               </label>
             </Grid>

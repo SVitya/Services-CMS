@@ -5,6 +5,7 @@ export default makeStyles((theme) => ({
     marginBottom: theme.spacing(3),
   },
   toolbar: {
+    padding: 0,
     display: 'flex',
     justifyContent: 'space-between',
   },
