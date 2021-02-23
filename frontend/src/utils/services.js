@@ -4,7 +4,7 @@ const server = axios.create({ server: 'http://localhost:5000'});
 
 server.interceptors.request.use(req => {
   if (localStorage.getItem('profile')) {
-    req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem('profile')).data.token}`;
+    req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem('profile')).token}`;
   }
 
   return req;

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
   AppBar,
@@ -8,26 +9,26 @@ import {
   Button
 } from '@material-ui/core';
 
+import { LOGOUT } from '../../redux/user/user.types';
 import useStyles from './header.styles';
 
-const Header = ({ isSignIn, setIsSignIn}) => {
+const Header = () => {
   const [mobile, setMobile] = useState(false);
+  const isSignIn = useSelector(store => store.user.isSignIn);
+  const dispatch = useDispatch();
   const styles = useStyles();
-
-  const logout = () => {
-    localStorage.clear();
-    setIsSignIn(false);
-  }
 
   useEffect(() => {
     const setResponsiveness = () => {
       return window.innerWidth <  360 ? setMobile(true) : setMobile(false);
     };
-
     setResponsiveness();
-
     window.addEventListener("resize", () => setResponsiveness());
   }, []);
+
+  const logout = () => {
+    dispatch({ type: LOGOUT });
+  }
 
   return (
     <AppBar className={styles.root} position='static'>

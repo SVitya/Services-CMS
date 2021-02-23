@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import {
   Container,
@@ -10,9 +11,9 @@ import {
 
 import Input from '../../components/input/Input';
 import useStyles from './auth.styles';
-import { signIn, signUp } from '../../utils/user';
+import { signin, signup } from '../../redux/user/user.actions';
 
-const Auth = ({ setIsSignIn }) => {
+const Auth = () => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -21,6 +22,7 @@ const Auth = ({ setIsSignIn }) => {
     confirmPassword: '',
   });
   const [isSignUp, setIsSignUp] = useState(true);
+  const dispatch = useDispatch();
   const history = useHistory();
   const styles = useStyles();
 
@@ -35,14 +37,11 @@ const Auth = ({ setIsSignIn }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    isSignUp ? signIn(formData)
-      .then(res => localStorage.setItem('profile', JSON.stringify({ ...res })))
-      .then(() => {history.push('/'); setIsSignIn(true)})
-      .catch(err => alert(err.response.data.message)) :
-    signUp(formData)
-      .then(res => localStorage.setItem('profile', JSON.stringify({ ...res })))
-      .then(() => {history.push('/'); setIsSignIn(true)})
-      .catch(err => alert(err.response.data.message));
+    if (isSignUp) {
+      dispatch(signin(formData, history));
+    } else {
+      dispatch(signup(formData, history));
+    }
   }
 
   return (
