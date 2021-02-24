@@ -8,6 +8,7 @@ export default makeStyles((theme) => ({
     height: '200px',
   },
   content: {
+    height: theme.spacing(10),
     paddingTop: theme.spacing(0.5),
   }
 }));

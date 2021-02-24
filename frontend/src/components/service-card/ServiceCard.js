@@ -17,10 +17,10 @@ const ServiceCard = ({ service }) => {
   return (
     <Card className={styles.card}>
       <CardActionArea component={Link} to={`service/${service._id}`}>
-        <CardMedia image={service.image ? service.image : image} title={`${service.title} title`} className={styles.media} />
+        <CardMedia className={styles.media} image={service.image ? service.image : image} title={`${service.title} title`} />
         <CardContent className={styles.content}>
           <Typography variant="h5" component="h2">{service.title}</Typography>
-          <Typography variant="body2" color="textSecondary" component="p">{service.description.match(/.{1,115}(\s|$)/g)[0] + '...'}</Typography>
+          <Typography variant="body2" color="textSecondary" component="p">{service.description.length > 80 ? service.description.match(/.{1,80}(\s|$)/g)[0] + '...' : service.description}</Typography>
         </CardContent>
       </CardActionArea>
     </Card>
